@@ -1,0 +1,13 @@
+# Deep Learning
+torch
+torchmetrics
+pytorch-lightning
+
+# Datasets & models
+datasets
+transformers
+
+# Others
+rich
+textual
+pre-commit

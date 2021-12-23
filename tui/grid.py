@@ -1,9 +1,10 @@
-from logging import PlaceHolder
 from textual.widgets import Placeholder
 from textual.views import GridView
 
-from tui.widgets.gpusts import GPUStats
+from tui.widgets.devices import DeviceStats
 from tui.widgets.params import Params
+from tui.widgets.selector import Selector
+from tui.widgets.checkpoints import Checkpoints
 
 
 class DashGrid(GridView):
@@ -33,12 +34,15 @@ class DashGrid(GridView):
         )
 
         self.grid.place(
-            area1=GPUStats(name="area1"),
-            area2=Params(name="area2"),
+            area1=DeviceStats(),
+            area2=Params(),
             area3=Placeholder(name="area3"),
-            area4=Placeholder(name="area4"),
-            area5=Placeholder(name="area5"),
-            area6=Placeholder(name="area6"),
-            area7=Placeholder(name="area7"),
-            area8=Placeholder(name="area8"),
+            area4=Checkpoints("tb_logs"),
+            area5=Selector("model", ["BERT", "RoBERTa"]),
+            area6=Selector(
+                "dataset",
+                ["tweet_eval", "amazon_reviews", "another_dataset", "and_another"],
+            ),
+            area7=Selector("task", ["train", "test", "predict"]),
+            area8=Selector("TBD", [""]),
         )

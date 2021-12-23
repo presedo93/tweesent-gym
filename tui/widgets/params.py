@@ -40,7 +40,6 @@ class Params(Widget):
         self.mouse_over = False
 
     def on_key(self, event: events.Keys) -> None:
-        print(self.conf["train"]["batch_size"])
         if event.key == "a":
             self.conf["train"]["batch_size"] += 1
         self.refresh()
@@ -67,6 +66,7 @@ class Params(Widget):
             layout,
             border_style="green" if self.mouse_over else "blue",
             box=box.HEAVY if self.has_focus else box.ROUNDED,
+            title="parameters",
         )
 
     def create_table(self, conf: Dict, stage: str) -> Table:

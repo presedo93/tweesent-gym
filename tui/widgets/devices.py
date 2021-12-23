@@ -5,6 +5,7 @@ from rich import box
 from rich.align import Align
 from rich.panel import Panel
 from rich.table import Table
+from rich.console import RenderableType
 
 from textual import events
 from textual.widget import Widget
@@ -14,7 +15,7 @@ from textual.reactive import Reactive
 from typing import Dict
 
 
-class GPUStats(Widget):
+class DeviceStats(Widget):
     has_focus: Reactive[bool] = Reactive(False)
     mouse_over: Reactive[bool] = Reactive(False)
     enabled: Reactive[bool] = Reactive(False)
@@ -38,7 +39,7 @@ class GPUStats(Widget):
     async def on_click(self, event) -> None:
         self.enabled = not self.enabled
 
-    def render(self):
+    def render(self) -> RenderableType:
         if self.enabled:
             self.timer_stats.resume()
             return self.panel_gpu_stats()
@@ -46,7 +47,7 @@ class GPUStats(Widget):
             self.timer_stats.pause()
             return self.panel_to_enable()
 
-    def panel_to_enable(self) -> Panel:
+    def panel_to_enable(self) -> RenderableType:
         grid = Table(
             style=f"{'green' if self.mouse_over else 'blue'}",
             show_header=False,
@@ -59,9 +60,10 @@ class GPUStats(Widget):
             Align.center(grid, vertical="middle"),
             border_style="green" if self.mouse_over else "blue",
             box=box.HEAVY if self.has_focus else box.ROUNDED,
+            title="devices",
         )
 
-    def panel_gpu_stats(self) -> Panel:
+    def panel_gpu_stats(self) -> RenderableType:
         self.fetch_gpu()
         table = Table(
             title=f"[black on {'green' if self.mouse_over else 'blue'}]GPU stats[/]",
@@ -84,6 +86,7 @@ class GPUStats(Widget):
             table,
             border_style="green" if self.mouse_over else "blue",
             box=box.HEAVY if self.has_focus else box.ROUNDED,
+            title="devices",
         )
 
     def fetch_gpu(self) -> Dict:

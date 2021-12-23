@@ -2,10 +2,14 @@ import argparse
 import pytorch_lightning as pl
 
 from pytorch_lightning import loggers as pl_loggers
-from pytorch_lightning.callbacks import EarlyStopping, LearningRateMonitor
+from pytorch_lightning.callbacks import (
+    EarlyStopping,
+    LearningRateMonitor,
+    RichProgressBar,
+    RichModelSummary,
+)
 
 from data.tweeteval import TweetEvalModule
-from tools.progress import RichProgressBar
 from models import model_picker
 
 
@@ -34,12 +38,13 @@ def train(args: argparse.Namespace, is_rich: bool = False) -> None:
     # Set the callbacks used during the stages.
     early_stopping = EarlyStopping("loss/valid", patience=12)
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
-    callbacks = [early_stopping, lr_monitor]
+    progress_bar = RichProgressBar()
+    model_summary = RichModelSummary()
+    callbacks = [early_stopping, lr_monitor, progress_bar, model_summary]
 
     # If the method is called with rich, a custom progress bar is used.
-    if is_rich:
-        progress_bar = RichProgressBar()
-        callbacks += [progress_bar]
+    # if is_rich:
+    #     callbacks += [progress_bar]
 
     # Create the trainer with the params.
     trainer = pl.Trainer.from_argparse_args(args, logger=tb_logger, callbacks=callbacks)

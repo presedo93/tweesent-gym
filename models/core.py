@@ -34,7 +34,11 @@ class CoreTweeSent(pl.LightningModule):
         x, y = batch
         y_hat = self(**x)
         loss = self.loss_fn(y_hat, y)
-        self.log("loss/train", loss, on_step=False, on_epoch=True)
+        if isinstance(self.log, list):
+            for i, _ in enumerate(self.log):
+                self.log[i]("loss/train", loss)
+        else:
+            self.log("loss/train", loss)
 
         met_out = self.train_metrics(y_hat, y)
         self.log_dict(met_out)
@@ -45,7 +49,11 @@ class CoreTweeSent(pl.LightningModule):
         x, y = batch
         y_hat = self(**x)
         loss = self.loss_fn(y_hat, y)
-        self.log("loss/valid", loss, on_step=False, on_epoch=True)
+        if isinstance(self.log, list):
+            for i, _ in enumerate(self.log):
+                self.log[i]("loss/valid", loss)
+        else:
+            self.log("loss/valid", loss)
 
         met_out = self.val_metrics(y_hat, y)
         self.log_dict(met_out)
@@ -56,7 +64,11 @@ class CoreTweeSent(pl.LightningModule):
         x, y = batch
         y_hat = self(**x)
         loss = self.loss_fn(y_hat, y)
-        self.log("loss/test", loss, on_step=False, on_epoch=True)
+        if isinstance(self.log, list):
+            for i, _ in enumerate(self.log):
+                self.log[i]("loss/test", loss)
+        else:
+            self.log("loss/test", loss)
 
         met_out = self.test_metrics(y_hat, y)
         self.log_dict(met_out)
@@ -79,7 +91,7 @@ class CoreTweeSent(pl.LightningModule):
         )
         return {
             "optimizer": optimizer,
-            # "interval": "epoch",
+            "interval": "epoch",
             "lr_scheduler": {"scheduler": scheduluer, "monitor": "loss/valid"},
         }
 

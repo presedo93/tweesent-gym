@@ -1,10 +1,12 @@
 from typing import Any, Dict, KeysView
 from models.core import CoreTweeSent
 from models.bert import BertSentiment, BERT_DESC
+from models.distilbert import DistilBertSentiment, DISTILBERT_DESC
 
 
 MODELS: Dict[str, Dict[str, Any]] = {
-    "bert": {"model": BertSentiment, "desc": BERT_DESC}
+    "bert": {"model": BertSentiment, "desc": BERT_DESC},
+    "distilbert": {"model": DistilBertSentiment, "desc": DISTILBERT_DESC},
 }
 
 

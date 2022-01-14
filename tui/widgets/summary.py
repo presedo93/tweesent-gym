@@ -1,17 +1,17 @@
 from rich import box
+from rich.align import Align
 from rich.panel import Panel
+from rich.console import RenderableType
 
 from textual import events
 from textual.widget import Widget
 from textual.reactive import Reactive
 
-from tui.messages import EnterPressed
 
-
-class Command(Widget):
+class Summary(Widget):
     has_focus: Reactive[bool] = Reactive(False)
     mouse_over: Reactive[bool] = Reactive(False)
-    text: Reactive[str] = Reactive("")
+    color: Reactive[str] = Reactive("blue")
 
     async def on_focus(self, event: events.Focus) -> None:
         self.has_focus = True
@@ -21,21 +21,17 @@ class Command(Widget):
 
     async def on_enter(self, event: events.Enter) -> None:
         self.mouse_over = True
+        self.color = "green"
 
     async def on_leave(self, event: events.Leave) -> None:
         self.mouse_over = False
+        self.color = "blue"
 
-    async def on_key(self, event) -> None:
-        if event.key == "ctrl+h":
-            self.text = self.text[:-1]
-        if event.key == "enter":
-            await self.post_message(EnterPressed(self))
-        else:
-            self.text += event.key
-
-    def render(self) -> Panel:
+    def render(self) -> RenderableType:
+        text = f"[{'green' if self.mouse_over else 'blue'}]Once a task is completed, summary will be shown here[/]"
         return Panel(
-            f"[b white]Command:[not b] {self.text}[/]",
-            box=box.HEAVY if self.has_focus else box.ROUNDED,
+            Align.center(text, vertical="middle"),
             border_style="green" if self.mouse_over else "blue",
+            box=box.HEAVY if self.has_focus else box.ROUNDED,
+            title="runner",
         )

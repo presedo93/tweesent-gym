@@ -7,14 +7,13 @@ from rich.padding import Padding
 from rich.console import RenderableType
 
 from textual import events
-from textual.message import Message
 from textual.widget import Widget
 from textual.reactive import Reactive
 
 from typing import Dict
 from tools.utils import open_conf
 
-from tui.widgets.command import EnterPressed
+from tui.messages import EnterCommand
 
 
 class Params(Widget):
@@ -39,12 +38,7 @@ class Params(Widget):
     async def on_leave(self, event: events.Leave) -> None:
         self.mouse_over = False
 
-    def on_key(self, event: events.Keys) -> None:
-        if event.key == "a":
-            self.conf["train"]["batch_size"] += 1
-        self.refresh()
-
-    async def handle_enter_pressed(self, message: EnterPressed) -> None:
+    async def handle_enter_command(self, message: EnterCommand) -> None:
         self.conf["train"]["batch_size"] += 1
         self.refresh()
 

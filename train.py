@@ -2,18 +2,14 @@ import argparse
 import pytorch_lightning as pl
 
 from pytorch_lightning import loggers as pl_loggers
-from pytorch_lightning.callbacks import (
-    EarlyStopping,
-    LearningRateMonitor,
-    RichProgressBar,
-    RichModelSummary,
-)
+from pytorch_lightning.callbacks import RichProgressBar
+from pytorch_lightning.callbacks import EarlyStopping, LearningRateMonitor
 
 from data.tweeteval import TweetEvalModule
 from models import model_picker
 
 
-def train(args: argparse.Namespace, is_rich: bool = False) -> None:
+def train(args: argparse.Namespace) -> None:
     """Trains a moodel on the dataset. It also performs the test stage and
     the makes predictions in the testset to plot the results.
 
@@ -34,20 +30,22 @@ def train(args: argparse.Namespace, is_rich: bool = False) -> None:
     tb_logger = pl_loggers.TensorBoardLogger(
         "tb_logs/", name=args.model, version=args.dataset, default_hp_metric=False
     )
+    if "wandb" in args.loggers.lower():
+        wb_logger = pl_loggers.WandbLogger(save_dir="tb_logs/", name=args.model)
+        loggers = [tb_logger, wb_logger]
+    else:
+        loggers = tb_logger
 
     # Set the callbacks used during the stages.
     early_stopping = EarlyStopping("loss/valid", patience=12)
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
     progress_bar = RichProgressBar()
-    model_summary = RichModelSummary()
-    callbacks = [early_stopping, lr_monitor, progress_bar, model_summary]
-
-    # If the method is called with rich, a custom progress bar is used.
-    # if is_rich:
-    #     callbacks += [progress_bar]
+    custom_callbacks = [early_stopping, lr_monitor, progress_bar]
 
     # Create the trainer with the params.
-    trainer = pl.Trainer.from_argparse_args(args, logger=tb_logger, callbacks=callbacks)
+    trainer = pl.Trainer.from_argparse_args(
+        args, logger=loggers, callbacks=custom_callbacks
+    )
 
     # Find the optimal learning rate.
     if args.auto_lr_find:
@@ -55,7 +53,7 @@ def train(args: argparse.Namespace, is_rich: bool = False) -> None:
 
     # Start the training/validation/test process.
     trainer.fit(tweesent, datatext)
-    trainer.test(tweesent)
+    trainer.test(datamodule=datatext)
 
     # Evaluate the model with the test set and the val set.
     trainer.predict(tweesent, datamodule=datatext)
@@ -66,7 +64,9 @@ def train(args: argparse.Namespace, is_rich: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
-    parser.add_argument("--model", type=str, default="bert", help="Model to train on")
+    parser.add_argument(
+        "--model", type=str, default="distilbert", help="Model to train on"
+    )
     parser.add_argument(
         "--dataset",
         type=str,
@@ -83,10 +83,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "--metrics", type=str, help="TorchMetrics to evaluate the model"
     )
+    parser.add_argument(
+        "--loggers",
+        type=str,
+        default="WandB",
+        help="Loggers to use: WandB, TensorBoard",
+    )
 
     # Training type params
     parser.add_argument(
-        "--learning_rate", type=float, default=1e-3, help="Learning Rate"
+        "--learning_rate", type=float, default=2e-5, help="Learning Rate"
     )
     parser.add_argument("--batch_size", type=int, default=8, help="Batch size")
     parser.add_argument(

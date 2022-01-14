@@ -1,39 +1,46 @@
 from textual.app import App
 from textual.reactive import Reactive
-from textual.widgets import Placeholder
 
+from tui.grid import DashGrid
 from tui.widgets.header import Header
 from tui.widgets.command import Command
-from tui.grid import DashGrid
+from tui.widgets.runner import Runner
+
+from tui.messages import EnterCommand
 
 
 class Dashboard(App):
-    show_bar = Reactive(False)
+    show_runner: Reactive[bool] = Reactive(False)
 
     async def on_load(self) -> None:
         """Bind keys here."""
-        await self.bind("ctrl+b", "toggle_sidebar", "Toggle sidebar")
+        await self.bind("ctrl+b", "toggle_runner", "Toggle Runner")
         await self.bind("ctrl+c", "quit", "Quit")
 
-    def watch_show_bar(self, show_bar: bool) -> None:
-        """Called when show_bar changes."""
-        self.bar.animate("layout_offset_x", 0 if show_bar else -40)
+    def watch_show_runner(self, show_runner: bool) -> None:
+        """Called when show_runner changes."""
+        self.runner.animate("visible", True if show_runner else False)
 
-    def action_toggle_sidebar(self) -> None:
+    def action_toggle_runner(self) -> None:
         """Called when user hits 'b' key."""
-        self.show_bar = not self.show_bar
+        self.show_runner = not self.show_runner
+
+    async def handle_enter_pressed(self, message) -> None:
+        print(message)
+        await self.params.post_message(EnterCommand(self))
 
     async def on_mount(self) -> None:
         """Build layout here."""
         # Main view
+        self.params = DashGrid()
         await self.view.dock(Header(), edge="top", size=3)
         await self.view.dock(Command(), edge="bottom", size=3)
-        await self.view.dock(DashGrid(), edge="top")
+        await self.view.dock(self.params, edge="top")
 
-        # Side bar
-        self.bar = Placeholder(name="left")
-        await self.view.dock(self.bar, edge="left", size=40, z=1)
-        self.bar.layout_offset_x = -40
+        # Runner
+        self.runner = Runner()
+        await self.view.dock(self.runner, edge="left", z=1)
+        self.runner.visible = False
 
 
 Dashboard.run()

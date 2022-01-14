@@ -1,9 +1,9 @@
-from textual.widgets import Placeholder
 from textual.views import GridView
 
-from tui.widgets.devices import DeviceStats
 from tui.widgets.params import Params
+from tui.widgets.summary import Summary
 from tui.widgets.selector import Selector
+from tui.widgets.devices import DeviceStats
 from tui.widgets.checkpoints import Checkpoints
 
 
@@ -36,7 +36,7 @@ class DashGrid(GridView):
         self.grid.place(
             area1=DeviceStats(),
             area2=Params(),
-            area3=Placeholder(name="area3"),
+            area3=Summary(),
             area4=Checkpoints("tb_logs"),
             area5=Selector("model", ["BERT", "RoBERTa"]),
             area6=Selector(

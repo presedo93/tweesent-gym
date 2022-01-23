@@ -1,5 +1,7 @@
 # TweeSent NLP model (Pytorch-lightning)
 
+Still pending to be documented...
+
 ## Docker
 
 To run it:

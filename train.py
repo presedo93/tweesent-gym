@@ -9,7 +9,7 @@ from data.tweeteval import TweetEvalModule
 from models import model_picker
 
 
-def train(args: argparse.Namespace) -> None:
+def train(args: argparse.Namespace, progress_bar=None) -> None:
     """Trains a moodel on the dataset. It also performs the test stage and
     the makes predictions in the testset to plot the results.
 
@@ -39,12 +39,13 @@ def train(args: argparse.Namespace) -> None:
     # Set the callbacks used during the stages.
     early_stopping = EarlyStopping("loss/valid", patience=12)
     lr_monitor = LearningRateMonitor(logging_interval="epoch")
-    progress_bar = RichProgressBar()
+    if progress_bar is None:
+        progress_bar = RichProgressBar()
     custom_callbacks = [early_stopping, lr_monitor, progress_bar]
 
     # Create the trainer with the params.
     trainer = pl.Trainer.from_argparse_args(
-        args, logger=loggers, callbacks=custom_callbacks
+        args, logger=loggers, callbacks=custom_callbacks, enable_model_summary=False
     )
 
     # Find the optimal learning rate.
@@ -53,13 +54,13 @@ def train(args: argparse.Namespace) -> None:
 
     # Start the training/validation/test process.
     trainer.fit(tweesent, datatext)
-    trainer.test(datamodule=datatext)
+    # trainer.test(datamodule=datatext)
 
     # Evaluate the model with the test set and the val set.
-    trainer.predict(tweesent, datamodule=datatext)
+    # trainer.predict(tweesent, datamodule=datatext)
 
-    metrics = tweesent.get_metrics(["all"])
-    print(metrics)
+    # metrics = tweesent.get_metrics(["all"])
+    # print(metrics)
 
 
 if __name__ == "__main__":

@@ -24,6 +24,8 @@ def default_args() -> argparse.Namespace:
     args.model = "bert"
     args.dataset = "tweet_eval"
     args.tokenizer = "bert-base-cased"
+    args.metrics = "acc"
+    args.loggers = "Board"
     args.learning_rate = 1e-3
     args.batch_size = 8
     args.workers = 4

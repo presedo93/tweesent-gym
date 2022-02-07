@@ -19,22 +19,6 @@ def open_conf(conf_path: str) -> dict:
     return conf
 
 
-def default_args() -> argparse.Namespace:
-    args = argparse.Namespace()
-    args.model = "bert"
-    args.dataset = "tweet_eval"
-    args.tokenizer = "bert-base-cased"
-    args.metrics = "acc"
-    args.loggers = "Board"
-    args.learning_rate = 1e-3
-    args.batch_size = 8
-    args.workers = 4
-
-    args.auto_lr_find = False
-
-    return args
-
-
 def get_checkpoint_hparams(
     path: str, checkpoint_idx: int = -1
 ) -> Tuple[str, str, Dict]:
@@ -57,3 +41,24 @@ def get_checkpoint_hparams(
         hparams = yaml.safe_load(y_file)
 
     return model, checkpoint, hparams
+
+
+def parse_metrics(key: str) -> str:
+    """Pair strings from the user input to the accepted ones
+    and vice versa.
+    Args:
+        key (str): str from the user input or from the logic.
+    Returns:
+        str: the converted value.
+    """
+    if "acc" in key:
+        return "Accuracy"
+    elif "recall" in key:
+        return "Recall"
+    # And the other way around
+    elif "Accuracy" in key:
+        return "acc"
+    elif "Recall" in key:
+        return "recall"
+
+    return "None"

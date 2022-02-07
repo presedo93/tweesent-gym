@@ -10,12 +10,17 @@ from datasets.arrow_dataset import Dataset
 from transformers import DataCollatorWithPadding
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+TWEET_DESC = "Dataset that has a huge collection of tweets in EN. It is splitted in train/val/test having a total \
+     size of 60k tweets. https://huggingface.co/datasets/tweet_eval"
+
 
 class TweetEvalModule(pl.LightningDataModule):
     def __init__(
         self, tokenizer: str, *, workers: int = 4, batch_size: int = 16, **kwargs
     ):
         super().__init__()
+        self.desc = TWEET_DESC
+
         # Check if tokenizer parallelism is enabled.
         if os.getenv("TOKENIZERS_PARALLELISM") in [None, "false"]:
             os.environ["TOKENIZERS_PARALLELISM"] = "true"

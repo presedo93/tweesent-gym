@@ -4,7 +4,7 @@ import torchmetrics as tm
 
 from typing import Any, Dict, List, Optional
 
-CORE_DESC = "Base model of TweeSent NLP models. It includes the different steps (train/val/test & predict)."
+CORE_DESC = "**Must not be used!** Base model of TweeSent NLP models. It includes the different steps (train/val/test & predict)."
 
 
 class CoreTweeSent(pl.LightningModule):

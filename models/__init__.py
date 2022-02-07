@@ -14,11 +14,15 @@ def available_models() -> KeysView[str]:
     return MODELS.keys()
 
 
-# TODO: raise not available model
 def model_picker(model_name: str) -> CoreTweeSent:
-    return MODELS[model_name.lower()]["model"]
+    try:
+        return MODELS[model_name.lower()]["model"]
+    except KeyError:
+        return MODELS["core"]["model"]
 
 
-# TODO: raise not available model
-def desc_picker(model_name: str) -> str:
-    return MODELS[model_name.lower()]["desc"]
+def desc_model(model_name: str) -> str:
+    try:
+        return MODELS[model_name.lower()]["desc"]
+    except KeyError:
+        return "Model has no description"

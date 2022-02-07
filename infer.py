@@ -7,12 +7,13 @@ from transformers import AutoTokenizer
 LABELS = ["negative", "neutral", "positive"]
 
 
-def inference(args: argparse.Namespace) -> float:
+def inference(args: argparse.Namespace, is_st: bool = False) -> float:
     """Inference an ONNX model exported from Pytorch
     Lightning.
 
     Args:
         args (argparse.Namespace): file, mode, engine, etc...
+        is_st (boolean): flag for streamlit interfaces.
     """
 
     tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
@@ -28,7 +29,11 @@ def inference(args: argparse.Namespace) -> float:
         input_ids: np.expand_dims(sample["input_ids"], axis=0),
     }
     out = tweesent.run(None, f_inputs)
-    print("Prediction:", LABELS[out[0].argmax()])
+
+    pred = LABELS[out[0].argmax()]
+    if not is_st:
+        print("Prediction:", pred)
+    return pred
 
 
 if __name__ == "__main__":

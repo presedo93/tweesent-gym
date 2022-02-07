@@ -12,5 +12,6 @@ onnxruntime-gpu
 
 # Others
 wandb
+stqdm
 streamlit
 pre-commit

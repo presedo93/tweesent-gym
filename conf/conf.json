@@ -25,5 +25,11 @@
         "metrics":          "acc",
         "batch_size":       16,
         "workers":          4
+    },
+
+    "streamlit": {
+        "tasks":            ["Train", "Test", "Export", "Inference"],
+        "loggers":          ["Tensorboard", "WandB"],
+        "metrics":          ["Accuracy", "Recall"]
     }
 }

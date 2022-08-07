@@ -8,3 +8,5 @@ venv/
 *.onnx
 *.pt
 *.ckpt
+.python-version
+poetry.lock

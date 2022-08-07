@@ -1,4 +1,3 @@
-from operator import index
 import os
 import argparse
 import streamlit as st
@@ -6,7 +5,7 @@ import streamlit as st
 from train import train
 from export import export
 from infer import inference
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
 from models import available_models, desc_model
 from tools.utils import open_conf, parse_metrics
 from data import available_datasets, dataset_picker, desc_dataset

@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "tweesent-gym"
+version = "0.1.0"
+description = "Tweesent training project for NLP"
+authors = ["Rene Presedo <presedo93@gmail.com>"]
+readme = "README.md"
+packages = [{include = "tweesent_gym"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+torch = "^1.12.1"
+torchmetrics = "^0.9.3"
+pytorch-lightning = "^1.7.0"
+datasets = "^2.4.0"
+transformers = "^4.21.1"
+wandb = "^0.13.1"
+streamlit = "^1.11.1"
+stqdm = "^0.0.4"
+onnxruntime = "^1.12.1"
+watchdog = "^2.1.9"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.20.0"
+flake8 = "^5.0.4"
+black = "^22.6.0"
+ipython = "^8.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,11 +1,13 @@
 import pytorch_lightning as pl
 
 from data.tweeteval import TweetEvalModule, TWEET_DESC
+from data.financial import FinancialModule, FINAN_DESC
 from typing import Any, Dict, KeysView
 
 
 DATASETS: Dict[str, Dict[str, Any]] = {
-    "tweet_eval": {"set": TweetEvalModule, "desc": TWEET_DESC}
+    "tweet_eval": {"set": TweetEvalModule, "desc": TWEET_DESC},
+    "finan_phrase": {"set": FinancialModule, "desc": FINAN_DESC},
 }
 
 

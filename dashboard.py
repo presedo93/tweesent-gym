@@ -52,6 +52,7 @@ def sidebar(args: argparse.Namespace, conf: Dict) -> argparse.Namespace:
     args.batch_size = st.sidebar.number_input("Batch size", value=16, step=1)
     args.workers = st.sidebar.number_input("Workers", value=4, step=1)
 
+    # Debug
     st.sidebar.subheader("Debug")
     if st.sidebar.checkbox("Enable fast development run over n batches"):
         args.fast_dev_run = st.sidebar.number_input("Num iterations", value=2, step=1)

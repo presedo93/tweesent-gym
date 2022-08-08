@@ -9,9 +9,7 @@ from datasets.arrow_dataset import Dataset
 from transformers import DataCollatorWithPadding
 from typing import Optional, Any, Dict, List, Tuple, Union
 
-FINAN_DESC = (
-    "Dataset that brings the sentiment over 5000 sentences about financial topics"
-)
+FINAN_DESC = "Dataset that brings the sentiment over 5000 sentences about financial topics. https://huggingface.co/datasets/financial_phrasebank"
 
 
 class FinancialModule(pl.LightningDataModule):
